@@ -1,0 +1,18 @@
+Open a TCP socket
+    Bind to a port of your choosing
+    Loop forever
+        Accept a connection to your socket (returns socket for the client that connected)
+        Read the data from client socket, expecting GET /<filename>
+        if file found
+            Open file with filename and read contents into a buffer of bytes
+            Send via the client socket
+                Create HTTP OK message headers (see slide 102 from class, just the status line will suffice)
+                // chunk buffer where each size(chunk + header) < max TCP packet size 
+                // (or find a command to handle chunking for you)
+            	Create a message for each chunk of the buffer
+                	Concatenate HTTP OK header and chunk bytes
+            		Append "\r\n" (carriage return and new line) to the end
+            		Send this appended message out the client socket
+        else
+            Send "HTTP/1.1 404 Not Found\r\n\r\n <html><head></head><body><h1>404 Not Found</h1></body></html>\r\n" message
+        Close client socket
